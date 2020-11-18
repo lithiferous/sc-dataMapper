@@ -1,0 +1,57 @@
+ object Schema2CC {
+
+  import org.apache.spark.sql.types._
+
+  case class RecFieldRes(fieldStr: String, additionalCc: Option[String] = None)
+
+  case class CcRes(cc: String, additional: List[String])
+
+  def schema2Cc(schema: StructType, className: String): String = {
+    val res = CcRes(s"case class $className (\n", Nil)
+    val res1 = schema.map(field).foldLeft(res)((b, a) => b.copy(b.cc + s"\n${a.fieldStr},", b.additional ++ a.additionalCc))
+    res1.cc.stripSuffix(",") + "\n)\n" + res1.additional.mkString("\n\n")
+  }
+
+  private def field(sf: StructField): RecFieldRes = {
+
+    def fd: String => String = fieldDef(sf)
+
+    sf.dataType match {
+      case at: ArrayType => at.elementType match {
+        case s: StructType => RecFieldRes(fd(s"Seq[${sf.name.toLowerCase.capitalize}]"), Some(schema2Cc(s, sf.name.toLowerCase.capitalize)))
+        case _ => RecFieldRes(fd(s"Seq[${primitiveFiledType(at.elementType)}]"))
+      }
+      case mt: MapType => RecFieldRes(fd("Map")) //TODO
+      case st: StructType => RecFieldRes(fd(sf.name.toLowerCase.capitalize), Some(schema2Cc(st, sf.name.toLowerCase.capitalize)))
+      case pt => RecFieldRes(fd(primitiveFiledType(pt)))
+    }
+  }
+
+  private def primitiveFiledType(dt: String): DataType = dt match {
+    case _: "Byte" => ByteType
+    case _: "Short" => ShortType
+    case _: "Int" => IntegerType
+    case _: "Long" => LongType
+    case _: "Float" => FloatType
+    case _: "Double" => DoubleType
+    case _: "java.math.BigDecimal" => DecimalType
+    case _: "String" => StringType
+    case _: "Array[Byte]" => BinaryType
+    case _: "Boolean" => BooleanType
+    case _: "java.sql.Timestamp" => TimestampType
+    case _: "java.sql.Date" => DateType
+    case _ => "String"
+  }
+
+val types = Array("byte"
+                 ,"short"
+                 ,"int"
+                 ,"long"
+                 ,"float"
+                 ,"double"
+                 ,"java.math.bigdecimal"
+                 ,"string"
+                 ,"array[byte]"
+                 ,"boolean"
+                 ,"java.sql.timestamp"
+                 ,"java.sql.date")
