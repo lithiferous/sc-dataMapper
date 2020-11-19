@@ -27,21 +27,18 @@
     }
   }
 
-  private def primitiveFiledType(dt: String): DataType = dt match {
-    case _: "Byte" => ByteType
-    case _: "Short" => ShortType
-    case _: "Int" => IntegerType
-    case _: "Long" => LongType
-    case _: "Float" => FloatType
-    case _: "Double" => DoubleType
-    case _: "java.math.BigDecimal" => DecimalType
-    case _: "String" => StringType
-    case _: "Array[Byte]" => BinaryType
-    case _: "Boolean" => BooleanType
-    case _: "java.sql.Timestamp" => TimestampType
-    case _: "java.sql.Date" => DateType
-    case _ => "String"
-  }
+val types = Map("byte"                 -> ByteType
+               ,"short"                -> ShortType
+               ,"int"                  -> IntegerType
+               ,"long"                 -> LongType
+               ,"float"                -> FloatType
+               ,"double"               -> DoubleType
+               ,"java.math.bigdecimal" -> DecimalType
+               ,"string"               -> StringType
+               ,"array[byte]"          -> BinaryType
+               ,"boolean"              -> BooleanType
+               ,"java.sql.timestamp"   -> TimestampType
+               ,"java.sql.date"        -> DateType)
 
 val types = Array("byte"
                  ,"short"
