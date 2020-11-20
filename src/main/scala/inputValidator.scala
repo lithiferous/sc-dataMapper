@@ -1,3 +1,15 @@
+import scala.util.parsing.json._
+
+def unmarshal(jsonStr: String, sep: String) = {
+    val _res = JSON.parseFull(jsonStr)
+                   .get.asInstanceOf[List[Map[String, String]]]
+    for { l <- _res
+          m = l.values.toList
+    } yield m mkString (sep)
+}
+
+val reqs = unmarshal(jsonStr, ";")
+
 // existing_col_name, new_col_name, new_data_type, date_expression (required only if the new_data_type is of DateType)
  case class col(firstName: String, lastName: Option[String] = None)
  object Student{
