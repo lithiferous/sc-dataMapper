@@ -12,19 +12,17 @@ val s = SparkSession.builder
 
 import s.implicits._
 
-val path = "/home/bane/projects/scala/DecisionMapper/data"
+val path = "/home/bane/projects/scala/dataMapper/src/main/scala/data"
 val lines = s.sparkContext.textFile(path)
 val sep = ","
 val header = lines.first()
 val df = lines.filter(_ != header).collect
 
-def getRow(row: Array[String]):Option[(String, String, String, String)] = {
-    val skips = Set("\"\"")
-    val flag = row.map(word => skips.exists(s => s == word.replaceAll("\\s+","")))
-    return if (flag.contains(true)) 
-                None 
-           else 
-                Some( row match {case Array(a, b, c, d) => (a, b, c, d)})
+val skips = Set("\"\"")
+def getRow(row: Seq[String], skips: Set[String]):Option[Seq[String]] = { //row filter for empty strings
+    if (row.map(word => skips.exists(s => s == word.replaceAll("\\s+",""))).contains(true)) None else Some(row)
 }
 
-val _df = df.map(l => getRow(l.split(sep))).flatten.toSeq.toDF(header.split(sep): _*)
+val schema = StructType(header.split(",").map(f => StructField(f, StringType)))
+val _df = s.createDataFrame(s.sparkContext.parallelize(df.map(l => getRow(l.split(sep), skips))
+                             .flatten.map(l => Row.fromSeq(l))), schema)
