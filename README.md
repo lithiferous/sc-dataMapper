@@ -1,31 +1,56 @@
-# Sample Spark Project
-Sample Spark project that may be compiled into a JAR for running via `spark-submit`.
+# Spark dynamic data conversion
+Spark project that achieves the task of converting CSV data dynamically through logic from Json. Entire logic can be found within source code / pdf task description (./data/iDecisionGames/task.pdf).
 
 ## Dependencies
-* Spark 2.10.5
-* SBT 0.13.9
+* Spark 2.4.5
+* SBT 1.4.3
+* Play-json 2.4.0
+* Play-iteratees 2.4.0
 
-Both of these dependencies are available via [Homebrew](http://brew.sh/).
+## Running
+To run tests with SBT.
 
-```bash
-brew tap homebrew/versions
-brew install scala210
-brew install sbt
+```
+sbt "run <path_to_csv> <path_to_json> <path_to_results>"
 ```
 
-## Building
-To build a JAR for submission via `spark-submit` use the `assembly` SBT task.
-
-```bash
-sbt assembly
+## Construct logic
+* date formats
+```
+{"existing_col_name":"birthday","new_col_name":"d_o_b","new_data_type":"date", "fmt":"dd-MM-yyyy"}
+```
+* decimals
+```
+{"existing_col_name":"Weight (lbs)","new_col_name":"weight","new_data_type":"decimal","size":"4", "precision":"3"}
+```
+* sized strings
+```
+{"existing_col_name":"Name","new_col_name":"name","new_data_type":"varchar","size":"4"}
 ```
 
-## Helper Task
-A custom task exists to both compile the JAR and submit it to the Spark cluster. It will need to be edited to point at your local `spark-submit` executable. This may be used within an IDE such as IntelliJ.
-
-```scala
-lazy val spark_run = taskKey[Unit]("Builds the assembly and ships it to the Spark Cluster")
-spark_run := {
-  ("/full/path/to/bin/spark_submit " + assembly.value) !
-}
+## Results
+```
+[{
+  "Column" : "first_name",
+  "Unique_values" : 2,
+  "Values" : [ {
+    "John" : 1
+  }, {
+    "Lisa" : 1
+  } ]
+},
+{
+  "Column" : "total_years",
+  "Unique_values" : 1,
+  "Values" : [ {
+    "26" : 2
+  } ]
+},
+{
+  "Column" : "d_o_b",
+  "Unique_values" : 1,
+  "Values" : [ {
+    "26-01-1995" : 3
+  } ]
+}]
 ```

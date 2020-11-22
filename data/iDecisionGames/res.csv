@@ -1,0 +1,23 @@
+[{
+  "Column" : "first_name",
+  "Unique_values" : 2,
+  "Values" : [ {
+    "John" : 1
+  }, {
+    "Lisa" : 1
+  } ]
+},
+{
+  "Column" : "total_years",
+  "Unique_values" : 1,
+  "Values" : [ {
+    "26" : 2
+  } ]
+},
+{
+  "Column" : "d_o_b",
+  "Unique_values" : 1,
+  "Values" : [ {
+    "26-01-1995" : 3
+  } ]
+}]
