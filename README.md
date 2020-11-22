@@ -1,5 +1,6 @@
-# Spark data conversion
-Spark project that achieves the task of converting CSV data dynamically through logic from Json. Entire logic can be found within source code / pdf task description (./data/iDecisionGames/task.pdf).
+# Spark dynamic SQL queries
+Project that achieves the task of converting CSV data dynamically from Json. 
+Entire logic can be found within source code / pdf task description (./data/iDecisionGames/task.pdf).
 
 ## Dependencies
 * Spark 2.4.5
