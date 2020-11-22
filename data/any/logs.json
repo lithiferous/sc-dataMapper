@@ -1,0 +1,5 @@
+[
+{"existing_col_name":"ID","new_col_name":"sku","new_data_type":"integer"},
+{"existing_col_name":"Name","new_col_name":"name","new_data_type":"varchar","size":"4"},
+{"existing_col_name":"Weight (lbs)","new_col_name":"weight","new_data_type":"decimal","size":"4", "precision":"3"}
+]
