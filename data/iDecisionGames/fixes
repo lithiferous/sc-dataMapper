@@ -1,0 +1,5 @@
+'.. if (l.toSeq.map(w => w match { ..' instead of something like 'trim(col(colName)) =!= emptyString'
+- used type unsafe '.asInstanceOf[List[Map[String, String]]]' instead of expressing logic in case classes or sealed traits - overloaded sqlLine.apply methods do different things: just select a column, renaming, casting to different types;
+and have the name -> bad api design (difficult to read code)
+- 'sz: String, p: String' // cast sized type with precision - used String type for vals that have to be numeric (code allows to pass "foo", "bar")
+- has no tests
